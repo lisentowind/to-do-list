@@ -1,0 +1,92 @@
+{
+  "name": "todo-radar",
+  "displayName": "TODO 雷达",
+  "description": "检索当前项目代码中的 TODO，并在中文科技感侧边栏中展示与跳转。",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:todoRadar.panel",
+    "onCommand:todoRadar.refresh",
+    "onCommand:todoRadar.openTodo"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "todoRadar.refresh",
+        "title": "TODO 雷达: 刷新扫描",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "todoRadar.openTodo",
+        "title": "TODO 雷达: 打开 TODO"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "todoRadar",
+          "title": "TODO 雷达",
+          "icon": "media/todo-radar.svg"
+        }
+      ]
+    },
+    "views": {
+      "todoRadar": [
+        {
+          "type": "webview",
+          "id": "todoRadar.panel",
+          "name": "任务信号"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "todoRadar.refresh",
+          "when": "view == todoRadar.panel",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TODO 雷达",
+      "properties": {
+        "todoRadar.keywords": {
+          "type": "array",
+          "default": [
+            "TODO",
+            "FIXME",
+            "HACK",
+            "XXX"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "需要识别的任务标记关键字。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "vitest run",
+    "check": "pnpm compile && pnpm test",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/vscode": "1.92.0",
+    "@vscode/vsce": "^3.3.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  }
+}
