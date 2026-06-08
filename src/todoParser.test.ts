@@ -11,6 +11,7 @@ describe('parseTodosFromText', () => {
         line: 2,
         column: 4,
         keyword: 'TODO',
+        severity: 'normal',
         text: '接入真实接口',
         rawLine: '// TODO: 接入真实接口'
       }
@@ -20,9 +21,9 @@ describe('parseTodosFromText', () => {
   it('supports configured keywords case-insensitively', () => {
     const result = parseTodosFromText('// fixme 修复边界\n// hack: 临时兼容', 'src/app.ts', ['FIXME', 'HACK']);
 
-    expect(result.map((todo) => [todo.keyword, todo.text])).toEqual([
-      ['FIXME', '修复边界'],
-      ['HACK', '临时兼容']
+    expect(result.map((todo) => [todo.keyword, todo.severity, todo.text])).toEqual([
+      ['FIXME', 'high', '修复边界'],
+      ['HACK', 'high', '临时兼容']
     ]);
   });
 
@@ -38,5 +39,13 @@ describe('parseTodosFromText', () => {
 
     expect(todo.text).toHaveLength(120);
     expect(todo.text.endsWith('...')).toBe(true);
+    expect(todo.severity).toBe('normal');
+  });
+
+  it('marks custom keywords as normal severity by default', () => {
+    const [todo] = parseTodosFromText('// NOTE: 说明信息', 'src/app.ts', ['NOTE']);
+
+    expect(todo.keyword).toBe('NOTE');
+    expect(todo.severity).toBe('normal');
   });
 });

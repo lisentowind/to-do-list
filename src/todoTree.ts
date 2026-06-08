@@ -5,6 +5,7 @@ export interface TodoTreeItem {
   line: number;
   column: number;
   keyword: string;
+  severity: 'high' | 'normal';
   text: string;
   rawLine: string;
 }
