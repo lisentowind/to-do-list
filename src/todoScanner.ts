@@ -10,6 +10,7 @@ export interface TodoScannerDependencies {
   maxFiles: number;
   readWorkspaceFiles: () => Promise<TodoScannerFile[]>;
   readFile?: (filePath: string) => Promise<string>;
+  toRelativePath?: (filePath: string) => string;
 }
 
 export function createTodoScanner(deps: TodoScannerDependencies) {
@@ -22,7 +23,10 @@ export function createTodoScanner(deps: TodoScannerDependencies) {
       const files = (await deps.readWorkspaceFiles()).slice(0, deps.maxFiles);
 
       for (const file of files) {
-        cache.set(file.filePath, buildRecords(file.filePath, file.text, keywords));
+        cache.set(
+          file.filePath,
+          buildRecords(file.filePath, file.text, keywords, deps.toRelativePath),
+        );
       }
     },
 
@@ -32,7 +36,10 @@ export function createTodoScanner(deps: TodoScannerDependencies) {
       }
 
       const text = await deps.readFile(filePath);
-      cache.set(filePath, buildRecords(filePath, text, keywords));
+      cache.set(
+        filePath,
+        buildRecords(filePath, text, keywords, deps.toRelativePath),
+      );
     },
 
     removeFile(filePath: string): void {
@@ -56,8 +63,11 @@ function buildRecords(
   filePath: string,
   text: string,
   keywords: string[],
+  toRelativePath?: (filePath: string) => string,
 ): TodoRecord[] {
   return parseTodosFromText(text, filePath, keywords).map((todo) =>
-    buildTodoRecord(todo),
+    buildTodoRecord(todo, {
+      relativePath: toRelativePath?.(filePath),
+    }),
   );
 }

@@ -66,6 +66,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const document = await vscode.workspace.openTextDocument(vscode.Uri.file(filePath));
       return document.getText();
     },
+    toRelativePath: (filePath) => vscode.workspace.asRelativePath(filePath, false),
   });
 
   const provider = new TodoRadarTreeProvider();

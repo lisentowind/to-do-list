@@ -44,19 +44,23 @@
       },
       {
         "command": "todoRadar.search",
-        "title": "TODO 雷达: 搜索任务"
+        "title": "TODO 雷达: 搜索任务",
+        "icon": "$(search)"
       },
       {
         "command": "todoRadar.filter",
-        "title": "TODO 雷达: 筛选任务"
+        "title": "TODO 雷达: 筛选任务",
+        "icon": "$(filter)"
       },
       {
         "command": "todoRadar.sort",
-        "title": "TODO 雷达: 切换视图模式"
+        "title": "TODO 雷达: 切换视图模式",
+        "icon": "$(list-tree)"
       },
       {
         "command": "todoRadar.clearFilters",
-        "title": "TODO 雷达: 清空搜索和筛选"
+        "title": "TODO 雷达: 清空搜索和筛选",
+        "icon": "$(clear-all)"
       },
       {
         "command": "todoRadar.focusCurrentFile",
@@ -101,27 +105,27 @@
         {
           "command": "todoRadar.search",
           "when": "view == todoRadar.panel",
-          "group": "navigation@1"
+          "group": "navigation"
         },
         {
           "command": "todoRadar.filter",
           "when": "view == todoRadar.panel",
-          "group": "navigation@2"
+          "group": "navigation"
         },
         {
           "command": "todoRadar.sort",
           "when": "view == todoRadar.panel",
-          "group": "navigation@3"
+          "group": "navigation"
         },
         {
           "command": "todoRadar.clearFilters",
           "when": "view == todoRadar.panel",
-          "group": "navigation@4"
+          "group": "navigation"
         },
         {
           "command": "todoRadar.refresh",
           "when": "view == todoRadar.panel",
-          "group": "navigation@5"
+          "group": "navigation"
         }
       ]
     },

@@ -47,4 +47,27 @@ describe('createTodoScanner', () => {
       scanner.getAllRecords().map((record) => [record.fileName, record.keyword]),
     ).toEqual([['app.ts', 'FIXME']]);
   });
+
+  it('uses workspace-relative paths when a mapper is provided', async () => {
+    const scanner = createTodoScanner({
+      maxFiles: 10,
+      readWorkspaceFiles: async () => [
+        {
+          filePath: '/workspace/src/views/explore.constants.ts',
+          text: '// TODO: 从项目根开始展示',
+        },
+      ],
+      toRelativePath: (filePath) => filePath.replace('/workspace/', ''),
+    });
+
+    await scanner.fullScan(['TODO']);
+
+    expect(scanner.getAllRecords()).toMatchObject([
+      {
+        relativePath: 'src/views/explore.constants.ts',
+        dirPath: 'src/views',
+        fileName: 'explore.constants.ts',
+      },
+    ]);
+  });
 });
