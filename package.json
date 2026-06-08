@@ -19,7 +19,16 @@
   "activationEvents": [
     "onView:todoRadar.panel",
     "onCommand:todoRadar.refresh",
-    "onCommand:todoRadar.openTodo"
+    "onCommand:todoRadar.openTodo",
+    "onCommand:todoRadar.search",
+    "onCommand:todoRadar.filter",
+    "onCommand:todoRadar.sort",
+    "onCommand:todoRadar.clearFilters",
+    "onCommand:todoRadar.focusCurrentFile",
+    "onCommand:todoRadar.focusCurrentFolder",
+    "onCommand:todoRadar.toggleRiskOnly",
+    "onCommand:todoRadar.copyTodo",
+    "onCommand:todoRadar.copyTodoPath"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -32,6 +41,42 @@
       {
         "command": "todoRadar.openTodo",
         "title": "TODO 雷达: 打开 TODO"
+      },
+      {
+        "command": "todoRadar.search",
+        "title": "TODO 雷达: 搜索任务"
+      },
+      {
+        "command": "todoRadar.filter",
+        "title": "TODO 雷达: 筛选任务"
+      },
+      {
+        "command": "todoRadar.sort",
+        "title": "TODO 雷达: 切换视图模式"
+      },
+      {
+        "command": "todoRadar.clearFilters",
+        "title": "TODO 雷达: 清空搜索和筛选"
+      },
+      {
+        "command": "todoRadar.focusCurrentFile",
+        "title": "TODO 雷达: 聚焦当前文件"
+      },
+      {
+        "command": "todoRadar.focusCurrentFolder",
+        "title": "TODO 雷达: 聚焦当前目录"
+      },
+      {
+        "command": "todoRadar.toggleRiskOnly",
+        "title": "TODO 雷达: 切换仅高风险"
+      },
+      {
+        "command": "todoRadar.copyTodo",
+        "title": "TODO 雷达: 复制任务内容"
+      },
+      {
+        "command": "todoRadar.copyTodoPath",
+        "title": "TODO 雷达: 复制任务路径"
       }
     ],
     "viewsContainers": {
@@ -54,9 +99,29 @@
     "menus": {
       "view/title": [
         {
+          "command": "todoRadar.search",
+          "when": "view == todoRadar.panel",
+          "group": "navigation@1"
+        },
+        {
+          "command": "todoRadar.filter",
+          "when": "view == todoRadar.panel",
+          "group": "navigation@2"
+        },
+        {
+          "command": "todoRadar.sort",
+          "when": "view == todoRadar.panel",
+          "group": "navigation@3"
+        },
+        {
+          "command": "todoRadar.clearFilters",
+          "when": "view == todoRadar.panel",
+          "group": "navigation@4"
+        },
+        {
           "command": "todoRadar.refresh",
           "when": "view == todoRadar.panel",
-          "group": "navigation"
+          "group": "navigation@5"
         }
       ]
     },
@@ -75,6 +140,58 @@
             "type": "string"
           },
           "description": "需要识别的任务标记关键字。"
+        },
+        "todoRadar.defaultViewMode": {
+          "type": "string",
+          "enum": [
+            "path",
+            "keyword",
+            "file"
+          ],
+          "default": "path",
+          "description": "任务树默认的展示模式。"
+        },
+        "todoRadar.defaultRiskOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否默认只显示高风险任务。"
+        },
+        "todoRadar.followActiveEditor": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用当前文件或当前目录范围时，是否跟随活动编辑器更新。"
+        },
+        "todoRadar.includeGlobs": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "额外要扫描的文件 glob 模式。"
+        },
+        "todoRadar.excludeGlobs": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "额外要排除的文件 glob 模式。"
+        },
+        "todoRadar.maxFiles": {
+          "type": "number",
+          "default": 2500,
+          "minimum": 1,
+          "description": "单次扫描允许处理的最大文件数。"
+        },
+        "todoRadar.autoRefresh": {
+          "type": "boolean",
+          "default": true,
+          "description": "文件变化时是否自动刷新任务缓存。"
+        },
+        "todoRadar.statusBarEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否显示状态栏任务汇总。"
         }
       }
     }
