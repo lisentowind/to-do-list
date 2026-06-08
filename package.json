@@ -2,7 +2,7 @@
   "name": "code-todo-radar",
   "displayName": "TODO 雷达",
   "description": "检索当前项目代码中的 TODO，并在中文科技感侧边栏中展示与跳转。",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "tingfeng",
   "icon": "media/todo-radar.png",
   "repository": {
