@@ -97,6 +97,23 @@ describe('applyTodoViewState', () => {
     ).toEqual(['panel.ts']);
   });
 
+  it('filters to a user-selected folder scope', () => {
+    const state = {
+      query: '',
+      keywordFilter: 'ALL',
+      scopeFilter: 'selectedFolder',
+      selectedFolderPath: 'src/auth',
+      riskFilter: 'all',
+      viewMode: 'path',
+    } as const;
+
+    expect(
+      applyTodoViewState(records, state, {
+        currentFilePath: '/workspace/src/ui/panel.ts',
+      }).map((record) => record.fileName),
+    ).toEqual(['login.ts']);
+  });
+
   it('falls back to workspace scope when no active editor exists', () => {
     const state = {
       query: '',
@@ -122,5 +139,31 @@ describe('updateViewState', () => {
     expect(state.query).toBe('auth');
     expect(state.keywordFilter).toBe('FIXME');
     expect(state.viewMode).toBe('path');
+  });
+
+  it('clears a selected folder path when switching back to a non-folder scope', () => {
+    const state = updateViewState(
+      {
+        ...createDefaultViewState(),
+        scopeFilter: 'selectedFolder',
+        selectedFolderPath: 'src/auth',
+      },
+      {
+        scopeFilter: 'workspace',
+      },
+    );
+
+    expect(state.scopeFilter).toBe('workspace');
+    expect(state.selectedFolderPath).toBeUndefined();
+  });
+
+  it('falls back to workspace when the selected folder resolves to the project root', () => {
+    const state = updateViewState(createDefaultViewState(), {
+      scopeFilter: 'selectedFolder',
+      selectedFolderPath: '.',
+    });
+
+    expect(state.scopeFilter).toBe('workspace');
+    expect(state.selectedFolderPath).toBeUndefined();
   });
 });

@@ -1,3 +1,4 @@
+import * as path from 'node:path';
 import * as vscode from 'vscode';
 import { createDefaultViewState, TodoViewState, updateViewState } from './todoViewState';
 
@@ -32,6 +33,7 @@ export function registerTodoCommands(
       );
     }),
     vscode.commands.registerCommand('todoRadar.filter', async () => {
+      const currentState = controller.getViewState();
       const picks: vscode.QuickPickItem[] = [
         { label: '全部关键字', description: 'keyword:ALL' },
         ...controller.getKeywords().map((keyword) => ({
@@ -41,6 +43,13 @@ export function registerTodoCommands(
         { label: '全部范围', description: 'scope:workspace' },
         { label: '当前文件', description: 'scope:currentFile' },
         { label: '当前目录', description: 'scope:currentFolder' },
+        {
+          label: '选择目录...',
+          description: 'scope:selectedFolder',
+          detail: currentState.selectedFolderPath
+            ? `当前: ${currentState.selectedFolderPath}`
+            : '在当前项目中任选一个目录作为筛选范围',
+        },
         { label: '全部风险', description: 'risk:all' },
         { label: '仅高风险', description: 'risk:highRiskOnly' },
       ];
@@ -65,6 +74,26 @@ export function registerTodoCommands(
       }
 
       if (kind === 'scope') {
+        if (value === 'selectedFolder') {
+          const selectedFolderPath = await pickFolderScope();
+
+          if (selectedFolderPath === undefined) {
+            return;
+          }
+
+          controller.setViewState(
+            updateViewState(controller.getViewState(), selectedFolderPath
+              ? {
+                  scopeFilter: 'selectedFolder',
+                  selectedFolderPath,
+                }
+              : {
+                  scopeFilter: 'workspace',
+                }),
+          );
+          return;
+        }
+
         controller.setViewState(
           updateViewState(controller.getViewState(), {
             scopeFilter: value as TodoViewState['scopeFilter'],
@@ -154,4 +183,52 @@ export function registerTodoCommands(
     }),
     vscode.commands.registerCommand('todoRadar.refresh', () => controller.refresh()),
   ];
+}
+
+async function pickFolderScope(): Promise<string | undefined> {
+  const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+  if (!workspaceFolder) {
+    void vscode.window.showWarningMessage('请先打开一个项目目录。');
+    return undefined;
+  }
+
+  const activeFileUri = vscode.window.activeTextEditor?.document.uri;
+  const defaultUri =
+    activeFileUri?.scheme === 'file'
+      ? vscode.Uri.file(path.dirname(activeFileUri.fsPath))
+      : workspaceFolder.uri;
+  const selected = await vscode.window.showOpenDialog({
+    canSelectFiles: false,
+    canSelectFolders: true,
+    canSelectMany: false,
+    defaultUri,
+    openLabel: '选择筛选目录',
+    title: '选择要查看的目录范围',
+  });
+  const folderUri = selected?.[0];
+
+  if (!folderUri) {
+    return undefined;
+  }
+
+  const selectedWorkspaceFolder = vscode.workspace.getWorkspaceFolder(folderUri);
+  if (!selectedWorkspaceFolder) {
+    void vscode.window.showWarningMessage('请选择当前项目中的目录。');
+    return undefined;
+  }
+
+  const relativePath = normalizeSelectedFolderPath(
+    vscode.workspace.asRelativePath(folderUri, false),
+  );
+
+  return relativePath;
+}
+
+function normalizeSelectedFolderPath(folderPath: string): string {
+  const normalized = folderPath
+    .replace(/\\/g, '/')
+    .replace(/^\.?\//, '')
+    .replace(/\/+$/, '');
+
+  return normalized === '.' ? '' : normalized;
 }

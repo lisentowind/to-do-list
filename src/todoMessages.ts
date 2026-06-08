@@ -38,6 +38,13 @@ export function formatTreeMessage(
     parts.push('范围: 当前目录');
   }
 
+  if (
+    viewState?.scopeFilter === 'selectedFolder' &&
+    viewState.selectedFolderPath
+  ) {
+    parts.push(`范围: ${viewState.selectedFolderPath}`);
+  }
+
   if (viewState?.riskFilter === 'highRiskOnly') {
     parts.push('风险: 仅高风险');
   }

@@ -23,6 +23,28 @@ describe('formatTreeMessage', () => {
     ).toContain('搜索: auth');
   });
 
+  it('shows the selected folder scope in the summary', () => {
+    expect(
+      formatTreeMessage(
+        {
+          status: 'ready',
+          limited: false,
+          visibleCount: 2,
+          fileCount: 1,
+          highRiskCount: 1,
+        },
+        {
+          query: '',
+          keywordFilter: 'ALL',
+          scopeFilter: 'selectedFolder',
+          selectedFolderPath: 'src/auth',
+          riskFilter: 'all',
+          viewMode: 'path',
+        },
+      ),
+    ).toContain('范围: src/auth');
+  });
+
   it('distinguishes empty workspace from filtered empty results', () => {
     expect(
       formatTreeMessage(

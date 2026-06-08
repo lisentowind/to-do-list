@@ -2,7 +2,7 @@
   "name": "code-todo-radar",
   "displayName": "TODO 雷达",
   "description": "检索当前项目代码中的 TODO，并在中文科技感侧边栏中展示与跳转。",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "tingfeng",
   "icon": "media/todo-radar.png",
   "repository": {
@@ -35,52 +35,63 @@
     "commands": [
       {
         "command": "todoRadar.refresh",
-        "title": "TODO 雷达: 刷新扫描",
+        "category": "TODO 雷达",
+        "title": "刷新扫描",
         "icon": "$(refresh)"
       },
       {
         "command": "todoRadar.openTodo",
-        "title": "TODO 雷达: 打开 TODO"
+        "category": "TODO 雷达",
+        "title": "打开任务"
       },
       {
         "command": "todoRadar.search",
-        "title": "TODO 雷达: 搜索任务",
+        "category": "TODO 雷达",
+        "title": "搜索任务",
         "icon": "$(search)"
       },
       {
         "command": "todoRadar.filter",
-        "title": "TODO 雷达: 筛选任务",
+        "category": "TODO 雷达",
+        "title": "筛选任务",
         "icon": "$(filter)"
       },
       {
         "command": "todoRadar.sort",
-        "title": "TODO 雷达: 切换视图模式",
+        "category": "TODO 雷达",
+        "title": "切换视图",
         "icon": "$(list-tree)"
       },
       {
         "command": "todoRadar.clearFilters",
-        "title": "TODO 雷达: 清空搜索和筛选",
+        "category": "TODO 雷达",
+        "title": "清空筛选",
         "icon": "$(clear-all)"
       },
       {
         "command": "todoRadar.focusCurrentFile",
-        "title": "TODO 雷达: 聚焦当前文件"
+        "category": "TODO 雷达",
+        "title": "聚焦当前文件"
       },
       {
         "command": "todoRadar.focusCurrentFolder",
-        "title": "TODO 雷达: 聚焦当前目录"
+        "category": "TODO 雷达",
+        "title": "聚焦当前目录"
       },
       {
         "command": "todoRadar.toggleRiskOnly",
-        "title": "TODO 雷达: 切换仅高风险"
+        "category": "TODO 雷达",
+        "title": "切换高风险"
       },
       {
         "command": "todoRadar.copyTodo",
-        "title": "TODO 雷达: 复制任务内容"
+        "category": "TODO 雷达",
+        "title": "复制任务内容"
       },
       {
         "command": "todoRadar.copyTodoPath",
-        "title": "TODO 雷达: 复制任务路径"
+        "category": "TODO 雷达",
+        "title": "复制任务路径"
       }
     ],
     "viewsContainers": {
