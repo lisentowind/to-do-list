@@ -39,10 +39,20 @@ describe('buildTodoTree', () => {
         fileName: 'Panel.tsx',
         relativePath: 'src/components/Panel.tsx',
         line: 3,
-        column: 4,
+        column: 8,
         keyword: 'XXX',
         text: '历史兼容',
         rawLine: '// XXX: 历史兼容'
+      },
+      {
+        filePath: '/workspace/src/components/Panel.tsx',
+        fileName: 'Panel.tsx',
+        relativePath: 'src/components/Panel.tsx',
+        line: 3,
+        column: 2,
+        keyword: 'HACK',
+        text: '先保留兼容代码',
+        rawLine: '// HACK: 先保留兼容代码'
       }
     ]);
 
@@ -51,7 +61,7 @@ describe('buildTodoTree', () => {
       type: 'folder',
       name: 'src',
       path: 'src',
-      count: 3
+      count: 4
     });
     expect(tree[1]).toMatchObject({
       type: 'file',
@@ -69,7 +79,7 @@ describe('buildTodoTree', () => {
       type: 'folder',
       name: 'components',
       path: 'src/components',
-      count: 2
+      count: 3
     });
     expect(tree[0].children[1]).toMatchObject({
       type: 'file',
@@ -88,7 +98,7 @@ describe('buildTodoTree', () => {
       type: 'file',
       name: 'Panel.tsx',
       path: 'src/components/Panel.tsx',
-      count: 2
+      count: 3
     });
 
     const panelNode = componentsNode.children[0];
@@ -97,6 +107,7 @@ describe('buildTodoTree', () => {
     }
 
     expect(panelNode.todos.map((todo) => [todo.line, todo.keyword])).toEqual([
+      [3, 'HACK'],
       [3, 'XXX'],
       [12, 'TODO']
     ]);

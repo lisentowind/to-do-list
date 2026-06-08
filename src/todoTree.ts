@@ -97,7 +97,7 @@ function finalizeChildren(folder: MutableFolderNode): TodoTreeNode[] {
   const fileChildren = Array.from(folder.filesByName.values())
     .map((fileNode) => ({
       ...fileNode,
-      todos: [...fileNode.todos].sort((left, right) => left.line - right.line || left.column - right.column)
+      todos: sortTodos(fileNode.todos)
     }))
     .sort(compareNodes);
 
@@ -126,4 +126,10 @@ function createFolderNode(name: string, path: string): MutableFolderNode {
 
 function normalizePath(value: string): string {
   return value.replace(/\\/g, '/').replace(/^\.?\//, '');
+}
+
+function sortTodos<T extends TodoTreeItem>(todos: T[]): T[] {
+  return [...todos].sort(
+    (left, right) => left.line - right.line || left.column - right.column,
+  );
 }
